@@ -1,20 +1,16 @@
-/* Service worker de "Seguimiento de Cobros" — NegoFIN S.A.E.C.A.
- * Cachea el shell de la app para que sea instalable y abra en pantalla completa.
- * Sube la versión (CACHE_NAME) cada vez que cambies los archivos para forzar la actualización.
- */
-var CACHE_NAME = 'cobros-negofin-v1';
+var CACHE_NAME = 'cobros-negofin-v2';
 
 var ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './css/styles.css',
-  './js/app.js',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/icon-maskable-192.png',
-  './icons/icon-maskable-512.png',
-  './icons/apple-touch-icon.png',
+  './styles.css',
+  './app.js',
+  './icon-192.png',
+  './icon-512.png',
+  './icon-maskable-192.png',
+  './icon-maskable-512.png',
+  './apple-touch-icon.png',
   './favicon.ico',
   'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'
 ];
@@ -24,9 +20,7 @@ self.addEventListener('install', function (event) {
     caches.open(CACHE_NAME).then(function (cache) {
       return Promise.all(
         ASSETS.map(function (url) {
-          return cache.add(url).catch(function () {
-            // si un recurso externo falla (sin conexión), no bloquea la instalación
-          });
+          return cache.add(url).catch(function () {});
         })
       );
     })
