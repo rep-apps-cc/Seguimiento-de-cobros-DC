@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es-PY">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Seguimiento de Cobros</title>
+
+<meta name="description" content="Gestión y envío de mensajes de cobranza por WhatsApp a partir de una planilla Excel — NegoFIN S.A.E.C.A.">
+<meta name="theme-color" content="#006040">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cobros">
+
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="appbar">
+  <div class="appbar__inner">
+    <img class="appbar__mark" src="icons/icon-192.png" alt="NegoFIN">
+    <div class="appbar__titles">
+      <span class="appbar__title">Seguimiento de Cobros</span>
+      <span class="appbar__subtitle">NegoFIN S.A.E.C.A.</span>
+    </div>
+    <div class="appbar__spacer"></div>
+    <button class="appbar__iconbtn" id="resetBtn" title="Empezar de nuevo" aria-label="Empezar de nuevo">↺</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- Carga de planilla -->
+  <section class="section" id="uploadSection">
+    <div class="section__head">
+      <span class="section__title">Cargar planilla</span>
+    </div>
+    <label class="uploader" id="dropZone" for="fileInput">
+      <div class="uploader__icon">📄</div>
+      <div class="uploader__title">Tocá para elegir el Excel</div>
+      <div class="uploader__desc">o arrastralo aquí — .xlsx / .xls / .csv</div>
+      <input type="file" id="fileInput" accept=".xlsx,.xls,.csv">
+    </label>
+    <div class="file-chip hidden" id="fileChip">
+      <span>📎</span>
+      <span class="file-chip__name" id="fileChipName"></span>
+      <button class="file-chip__clear" id="fileChipClear" aria-label="Quitar archivo">✕</button>
+    </div>
+
+    <div class="file-chip hidden" id="phonePicker" style="flex-direction:column; align-items:stretch; gap:8px;">
+      <span style="font-weight:600; font-size:0.85rem;">¿Cuál columna tiene el número de celular?</span>
+      <select id="phoneColumnSelect" style="padding:9px; border-radius:8px; border:1px solid var(--line); font-size:0.85rem;"></select>
+    </div>
+  </section>
+
+  <!-- Resumen -->
+  <section class="section hidden" id="statsSection">
+    <div class="section__head">
+      <span class="section__title">Resumen</span>
+    </div>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat__value" id="statTotal">0</div>
+        <div class="stat__label">Contactos</div>
+      </div>
+      <div class="stat">
+        <div class="stat__value" id="statValid">0</div>
+        <div class="stat__label">Números válidos</div>
+      </div>
+      <div class="stat">
+        <div class="stat__value" id="statAmount">Gs. 0</div>
+        <div class="stat__label">En gestión</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Plantilla del mensaje -->
+  <section class="section hidden" id="templateSection">
+    <div class="template" id="templateBox">
+      <button class="template__toggle" id="templateToggle" type="button">
+        ✏️ Mensaje de WhatsApp
+        <span class="chev">▾</span>
+      </button>
+      <div class="template__body">
+        <div class="chips" id="chipsRow"></div>
+        <textarea id="templateInput" spellcheck="false"></textarea>
+        <div class="template__foot">
+          <span>Tocá un campo para insertarlo en el mensaje</span>
+          <span id="templatePreviewCount"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Buscador -->
+  <section class="section hidden" id="searchSection">
+    <div class="search">
+      <span class="search__icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Buscar por nombre, cédula o número...">
+    </div>
+  </section>
+
+  <!-- Lista de contactos -->
+  <section class="section hidden" id="listSection">
+    <div class="section__head">
+      <span class="section__title">Contactos</span>
+      <span class="section__hint" id="listCount"></span>
+    </div>
+    <div class="list" id="contactList"></div>
+  </section>
+
+  <!-- Estado vacío -->
+  <div class="empty" id="emptyState">
+    <span class="empty__icon">📊</span>
+    <div class="empty__title">Todavía no hay ninguna planilla cargada</div>
+    <div class="empty__desc">Subí un Excel con nombres, montos y números de celular. La app detecta las columnas automáticamente y genera los enlaces de WhatsApp por ti.</div>
+  </div>
+
+</main>
+
+<div class="actionbar" id="actionBar">
+  <button class="btn btn--primary" id="generateBtn">⚡ Generar enlaces</button>
+  <button class="btn btn--ghost" id="exportBtn" disabled>⬇ Descargar Excel</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
